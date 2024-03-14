@@ -1,0 +1,127 @@
+import java.util.ArrayList;
+import java.util.List;
+
+// User class to store user information
+class User {
+    private String username;
+    private String password;
+    private List<Account> accounts;
+
+    public User(String username, String password) {
+        this.username = username;
+        this.password = password;
+        this.accounts = new ArrayList<>();
+    }
+
+    // Getters and setters
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+}
+
+// Account class to represent user accounts
+class Account {
+    private String accountNumber;
+    private double balance;
+    private List<Transaction> transactions;
+
+    public Account(String accountNumber) {
+        this.accountNumber = accountNumber;
+        this.balance = 0.0;
+        this.transactions = new ArrayList<>();
+    }
+
+    // Getters and setters
+    public String getAccountNumber() {
+        return accountNumber;
+    }
+
+    public double getBalance() {
+        return balance;
+    }
+
+    public void deposit(double amount) {
+        balance += amount;
+        transactions.add(new Transaction("Deposit", amount));
+    }
+
+    public void withdraw(double amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            transactions.add(new Transaction("Withdrawal", -amount));
+        } else {
+            System.out.println("Insufficient balance.");
+        }
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+}
+
+// Transaction class to represent transactions
+class Transaction {
+    private String type;
+    private double amount;
+
+    public Transaction(String type, double amount) {
+        this.type = type;
+        this.amount = amount;
+    }
+
+    // Getters
+    public String getType() {
+        return type;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+}
+
+// Main class to simulate banking operations
+class OnlineBankingSystem {
+    public static void main(String[] args) {
+        // Create users
+        User user1 = new User("user1", "password1");
+
+        // Create accounts for users
+        Account account1 = new Account("123456");
+
+        // Add accounts to users
+        user1.getAccounts().add(account1);
+
+        // Deposit and withdraw operations
+        account1.deposit(1000);
+        account1.withdraw(500);
+
+        // Transfer between accounts
+        double transferAmount = 200;
+        Account fromAccount = account1;
+        Account toAccount = account1; // For simplicity, transferring within the same account
+        if (fromAccount.getBalance() >= transferAmount) {
+            fromAccount.withdraw(transferAmount);
+            toAccount.deposit(transferAmount);
+            System.out.println("Transfer successful.");
+        } else {
+            System.out.println("Transfer failed due to insufficient balance.");
+        }
+
+        // Display transaction history
+        System.out.println("Transaction History:");
+        for (Transaction transaction : account1.getTransactions()) {
+            System.out.println("Type: " + transaction.getType() + ", Amount: $" + transaction.getAmount());
+        }
+
+        // Check balance
+        System.out.println("Current Balance: $" + account1.getBalance());
+    }
+}
